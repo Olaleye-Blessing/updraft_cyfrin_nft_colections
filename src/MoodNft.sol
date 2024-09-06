@@ -6,6 +6,8 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {Base64} from "@openzeppelin/contracts/utils/Base64.sol";
 
 contract MoodNft is ERC721 {
+    error MoodNft__NotOwner();
+
     enum Mood {
         HAPPY,
         SAD
@@ -57,6 +59,13 @@ contract MoodNft is ERC721 {
         );
 
         return string(abi.encodePacked(_baseURI(), Base64.encode(bytes(tokenMetaData))));
+    }
+
+    function flipNftMood(uint256 _tokenId) public {
+        // TODO: Use function that checks owners and approvals in the ERC721 contract
+        if (_ownerOf(_tokenId) != msg.sender) revert MoodNft__NotOwner();
+
+        s_tokenIdToMood[_tokenId] = s_tokenIdToMood[_tokenId] == Mood.HAPPY ? Mood.SAD : Mood.HAPPY;
     }
 
     function _baseURI() internal pure override returns (string memory) {
