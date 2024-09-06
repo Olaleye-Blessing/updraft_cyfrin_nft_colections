@@ -23,4 +23,19 @@ contract BasicNftTest is Test {
         console.log("___ The NFT URI Is ___");
         console.log(moodNft.tokenURI(0));
     }
+
+    function test_flipNftMood() public {
+        vm.startPrank(USER);
+        moodNft.mintNft();
+        string memory initialUri = moodNft.tokenURI(0);
+
+        moodNft.flipNftMood(0);
+        string memory firstFlipUri = moodNft.tokenURI(0);
+
+        moodNft.flipNftMood(0);
+        string memory secondFlipUri = moodNft.tokenURI(0);
+
+        assertNotEq(initialUri, firstFlipUri);
+        assertEq(initialUri, secondFlipUri);
+    }
 }
